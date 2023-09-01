@@ -34,6 +34,14 @@
               <div class="mx-4 my-2">Hello, {{ username }}!</div>
               <div class="d-flex flex-column">
                 <v-btn
+                  color="orange"
+                  prepend-icon="mdi-account-circle"
+                  variant="text"
+                  size="small"
+                  @click="this.$router.push('/profile')"
+                  >Profile</v-btn
+                >
+                <v-btn
                   color="blue"
                   prepend-icon="mdi-cash-multiple"
                   variant="text"
