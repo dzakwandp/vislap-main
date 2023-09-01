@@ -116,6 +116,7 @@ export default {
     onLogout() {
       useAuthStore().logout();
       this.loginCheck();
+      this.$router.push("/");
     },
     loginCheck() {
       (this.isLoggedIn = useAuthStore().loginStatus),

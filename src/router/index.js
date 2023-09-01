@@ -12,6 +12,7 @@ import Trans from '@/views/Trans/TransPage.vue'
 import TransDetail from '@/views/Trans/TransDetail.vue'
 import Service from '@/views/ServicePage.vue'
 import ServiceList from '@/views/ServiceList.vue'
+import Profile from '@/views/ProfilePage.vue'
 import About from '@/views/AboutPage.vue'
 
 const routes = [
@@ -53,6 +54,11 @@ const routes = [
         path: 'servicelist',
         name: 'servicelist',
         component: ServiceList
+      },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: Profile
       },
       {
         path: 'about',

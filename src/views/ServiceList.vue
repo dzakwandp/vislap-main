@@ -11,10 +11,10 @@
   <div v-else style="min-height: 80vh">
     <v-container>
       <v-card>
-        <v-card-title class="text-blue-darken-3">
+        <v-card-title class="text-blue-darken-3 mb-4">
           Your Service List
         </v-card-title>
-        <v-card class="ma-4" v-for="item in serviceData" :key="item.id">
+        <v-card class="mx-4 mb-12" v-for="item in serviceData" :key="item.id">
           <v-row class="ml-2">
             <v-col> Date: </v-col>
             <v-col> Technician: </v-col>
@@ -34,7 +34,7 @@
           <v-row class="mt-4 ml-2">
             <v-col> User Message: </v-col>
             <v-col> Technician Message: </v-col>
-            <v-col> Status Message: </v-col>
+            <v-col> Final Message: </v-col>
           </v-row>
           <v-row class="mt-n4 ml-2">
             <v-col>
