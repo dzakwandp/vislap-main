@@ -57,7 +57,7 @@
 import img1 from "@/assets/home1.jpg";
 import img2 from "@/assets/home2.jpg";
 import img3 from "@/assets/home3.jpg";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/vislap_logo.png";
 
 import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
 export default {
