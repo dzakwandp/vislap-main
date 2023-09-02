@@ -10,7 +10,7 @@
   </div>
   <div v-else class="d-flex flex-row">
     <v-container class="w-25 pl-8">
-      <v-card class="h-screen" border>
+      <v-sheet class="h-screen sheet" border rounded>
         <v-card-title class="text-body-2 font-weight-bold mt-16 mb-8"
           >Category:</v-card-title
         >
@@ -24,7 +24,7 @@
           color="blue-darken-3"
           density="compact"
         ></v-checkbox>
-      </v-card>
+      </v-sheet>
     </v-container>
     <v-container class="w-75">
       <div class="text-center text-h5">Spare Parts</div>
@@ -222,3 +222,10 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+@use "../styles/settings.scss";
+.sheet {
+  border-color: settings.$sheet-border-color;
+  border-width: 3px;
+}
+</style>
