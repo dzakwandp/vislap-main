@@ -1,75 +1,72 @@
 <template lang="">
-  <div>
-    <div class="d-flex">
-      <div class="w-50">
-        <v-img class="mx-auto" :src="serviceImg" :width="500"></v-img>
+  <div class="d-flex" style="min-height: 72vh">
+    <div class="w-50">
+      <v-img class="mx-auto" :src="serviceImg" :width="500"></v-img>
+    </div>
+    <div class="w-50 ma-4">
+      <div class="text-blue-darken-3 text-h3 font-weight-medium">Service</div>
+      <div>
+        Vislap menyediakan layanan service laptop dengan biaya yang terjangkau,
+        teknisi yang berpengalaman, dan kecepatan waktu pengerjaan.
+        <br />Anda dapat mengajukan permintaan service dengan memasukkan nomor
+        whatsapp dan keluhan anda pada form dibawah.
       </div>
-      <div class="w-50 ma-4">
-        <div class="text-blue-darken-3 text-h3 font-weight-medium">Service</div>
-        <div>
-          Vislap menyediakan layanan service laptop dengan biaya yang
-          terjangkau, teknisi yang berpengalaman, dan kecepatan waktu
-          pengerjaan.
-          <br />Anda dapat mengajukan permintaan service dengan memasukkan nomor
-          whatsapp dan keluhan anda pada form dibawah.
+      <div class="mt-4">
+        <!-- ketika sudah login -->
+        <div v-if="isLoggedIn">
+          <v-card class="pa-4">
+            <v-card-title class="text-blue-darken-3">
+              Ajukan Permintaan Service
+            </v-card-title>
+            <v-text-field
+              v-model="wa"
+              type="number"
+              variant="outlined"
+              color="blue-darken-3"
+              label="Masukkan Nomor Whatsapp"
+              density="compact"
+              :rules="[rules.required]"
+            ></v-text-field>
+            <v-textarea
+              v-model="message"
+              variant="outlined"
+              color="blue-darken-3"
+              label="Tuliskan keluhan anda"
+              :rules="[rules.required]"
+              clearable
+              auto-grow
+            ></v-textarea>
+            <v-card-actions>
+              <v-btn
+                class="mx-auto"
+                color="blue-darken-3"
+                variant="tonal"
+                :loading="loading"
+                @click="(loading = true), submitService()"
+                >Ajukan</v-btn
+              >
+            </v-card-actions>
+            <div class="text-center"></div>
+          </v-card>
         </div>
-        <div class="mt-4">
-          <!-- ketika sudah login -->
-          <div v-if="isLoggedIn">
-            <v-card class="pa-4">
-              <v-card-title class="text-blue-darken-3">
-                Ajukan Permintaan Service
-              </v-card-title>
-              <v-text-field
-                v-model="wa"
-                type="number"
-                variant="outlined"
+        <!-- ketika sudah belum login -->
+        <div v-else>
+          <v-card class="pa-4">
+            <v-card-title class="text-blue-darken-3">
+              Ajukan Permintaan Service
+            </v-card-title>
+            <v-card-text>Harap melakukan Login terlebih dahulu.</v-card-text>
+            <v-card-actions>
+              <v-btn
+                class="mx-auto"
                 color="blue-darken-3"
-                label="Masukkan Nomor Whatsapp"
-                density="compact"
-                :rules="[rules.required]"
-              ></v-text-field>
-              <v-textarea
-                v-model="message"
-                variant="outlined"
-                color="blue-darken-3"
-                label="Tuliskan keluhan anda"
-                :rules="[rules.required]"
-                clearable
-                auto-grow
-              ></v-textarea>
-              <v-card-actions>
-                <v-btn
-                  class="mx-auto"
-                  color="blue-darken-3"
-                  variant="tonal"
-                  :loading="loading"
-                  @click="(loading = true), submitService()"
-                  >Ajukan</v-btn
-                >
-              </v-card-actions>
-              <div class="text-center"></div>
-            </v-card>
-          </div>
-          <!-- ketika sudah belum login -->
-          <div v-else>
-            <v-card class="pa-4">
-              <v-card-title class="text-blue-darken-3">
-                Ajukan Permintaan Service
-              </v-card-title>
-              <v-card-text>Harap melakukan Login terlebih dahulu.</v-card-text>
-              <v-card-actions>
-                <v-btn
-                  class="mx-auto"
-                  color="blue-darken-3"
-                  variant="tonal"
-                  :loading="loading"
-                  @click="this.$router.push('/login')"
-                  >Login</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </div>
+                variant="tonal"
+                :loading="loading"
+                @click="this.$router.push('/login')"
+                >Login</v-btn
+              >
+            </v-card-actions>
+          </v-card>
         </div>
       </div>
     </div>
@@ -97,6 +94,7 @@ export default {
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,
+        background: "#F5F5F5",
         didOpen: (toast) => {
           toast.addEventListener("mouseenter", this.$swal.stopTimer);
           toast.addEventListener("mouseleave", this.$swal.resumeTimer);
@@ -126,7 +124,6 @@ export default {
           icon: "success",
           iconColor: "#2E7D32",
           color: "#757575",
-          background: "#F5F5F5",
         });
         this.message = null;
         this.wa = null;
@@ -142,7 +139,6 @@ export default {
             icon: "error",
             iconColor: "#C62828",
             color: "#757575",
-            background: "#F5F5F5",
           });
         }
       }
