@@ -81,6 +81,7 @@
       <v-text-field
         class="mx-4 w-25"
         density="compact"
+        type="number"
         v-model.number="kode_pos"
         label="Postal Code"
         variant="outlined"
