@@ -8,7 +8,7 @@
       indeterminate
     ></v-progress-circular>
   </div>
-  <div v-else>
+  <div v-else style="min-height: 72vh">
     <v-container class="w-75 mx-auto">
       <v-card>
         <v-card-title class="text-blue-darken-3"
@@ -58,28 +58,12 @@
           <!-- ketika cart kosong -->
           <tbody v-if="Object.keys(cartItem).length === 0">
             <tr>
-              <td>Subtotal</td>
-              <td>{{ formatCurrency(totalItemPrice) }}</td>
-            </tr>
-            <tr>
-              <td>Kode Unik</td>
-              <td>Rp 0</td>
-            </tr>
-            <tr>
               <td>Total</td>
               <td>Rp 0</td>
             </tr>
           </tbody>
           <!-- ketika cart memiliki item -->
           <tbody v-else>
-            <tr>
-              <td>Subtotal</td>
-              <td>{{ formatCurrency(totalItemPrice) }}</td>
-            </tr>
-            <tr>
-              <td>Kode Unik</td>
-              <td>{{ formatCurrency(uniqueCode) }}</td>
-            </tr>
             <tr>
               <td>Total</td>
               <td>{{ formatCurrency(grandTotal) }}</td>
@@ -115,6 +99,17 @@ export default {
       grandTotal: 0,
       uniqueCode: 0,
       url: useEnvStore().apiUrl,
+      Toast: this.$swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", this.$swal.stopTimer);
+          toast.addEventListener("mouseleave", this.$swal.resumeTimer);
+        },
+      }),
     };
   },
   methods: {
@@ -138,7 +133,6 @@ export default {
         });
         this.modifiedItem = newData;
         this.loading = false;
-        console.log(this.modifiedItem);
         this.subtotals();
       } catch (err) {
         console.log(err);
@@ -177,7 +171,6 @@ export default {
             user_id: useAuthStore().user_id,
             items: this.modifiedItem,
             final_price: this.grandTotal,
-            unique_code: this.uniqueCode,
           },
           {
             headers: {
@@ -186,10 +179,81 @@ export default {
           }
         );
         console.log(txs);
-        this.loadingAdd = false;
+        axios
+          .post(useEnvStore().apiUrl + "payment/process-payment/", txs.data, {
+            headers: {
+              Authorization: "Bearer " + useAuthStore().accessToken,
+            },
+          })
+          .then((res) => {
+            axios
+              .put(
+                useEnvStore().apiUrl + "txs/" + txs.data.id,
+                {
+                  status_id: 1,
+                  payment_token: res.data.token,
+                },
+                {
+                  headers: {
+                    Authorization: "Bearer " + useAuthStore().accessToken,
+                  },
+                }
+              )
+              .then((res) => {
+                axios
+                  .get(useEnvStore().apiUrl + "txs/" + txs.data.id, {
+                    headers: {
+                      Authorization: "Bearer " + useAuthStore().accessToken,
+                    },
+                  })
+                  .then((result) => {
+                    console.log(result);
+                    window.snap.pay(result.data.payment_token, {
+                      onSuccess: () => {
+                        this.Toast.fire({
+                          text: "Pembayaran berhasil",
+                          icon: "success",
+                          iconColor: "#FAFAFA",
+                          color: "#FAFAFA",
+                          background: "#1565C0",
+                        });
+                        this.$router.push("/transaction/" + txs.data.id);
+                      },
+                      onError: () => {
+                        this.$router.push("/transaction");
+                        this.Toast.fire({
+                          text: "Pembayaran gagal",
+                          icon: "error",
+                          iconColor: "#FAFAFA",
+                          color: "#FAFAFA",
+                          background: "#E57373",
+                        });
+                      },
+                      onClose: () => {
+                        this.loadingAdd = false;
+                        this.Toast.fire({
+                          text: "Pembayaran dibatalkan",
+                          icon: "error",
+                          iconColor: "#FAFAFA",
+                          color: "#FAFAFA",
+                          background: "#E57373",
+                        });
+                        this.getCartData();
+                      },
+                    });
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         useAuthStore().getCartValue();
-        this.getCartData();
-        this.$router.push("/transaction/" + txs.data.id);
       } catch (err) {
         console.log(err);
       }
@@ -207,12 +271,22 @@ export default {
         0
       );
       this.totalItemPrice = total_bayar;
-      this.uniqueCode = Math.floor(Math.random() * 1000);
+      this.uniqueCode = 0;
       this.grandTotal =
         parseInt(this.totalItemPrice) + parseInt(this.uniqueCode);
     },
   },
   mounted() {
+    let snapMidtrans = document.createElement("script");
+    snapMidtrans.setAttribute(
+      "src",
+      "https://app.sandbox.midtrans.com/snap/snap.js"
+    );
+    snapMidtrans.setAttribute(
+      "data-client-key",
+      "SB-Mid-client-lxNB99oD9QYJQZ5U"
+    );
+    document.head.appendChild(snapMidtrans);
     this.getCartData();
   },
 };

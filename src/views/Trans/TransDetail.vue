@@ -8,9 +8,8 @@
       indeterminate
     ></v-progress-circular>
   </div>
-  <div v-else>
-    <!-- for status menunggu pembayaran -->
-    <div v-if="txDetail.status_id === 1">
+  <div v-else style="min-height: 80vh">
+    <div>
       <v-container>
         <v-btn
           class="mb-2"
@@ -54,142 +53,45 @@
                   </v-col>
                 </v-row>
               </v-card>
-              <v-expansion-panels>
-                <v-expansion-panel>
-                  <v-expansion-panel-title class="font-weight-bold">
-                    Final Price: {{ formatCurrency(txDetail.final_price) }}
-                  </v-expansion-panel-title>
-                  <v-expansion-panel-text>
-                    <v-table>
-                      <tbody>
-                        <tr>
-                          <td>Total Price:</td>
-                          <td>
-                            {{
-                              formatCurrency(
-                                txDetail.final_price - txDetail.unique_code
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Unique Code:</td>
-                          <td>{{ formatCurrency(txDetail.unique_code) }}</td>
-                        </tr>
-                      </tbody>
-                    </v-table>
-                  </v-expansion-panel-text>
-                </v-expansion-panel>
-              </v-expansion-panels>
+              <v-card class="mx-4">
+                <v-card-text class="font-weight-bold">
+                  Final Price: {{ formatCurrency(txDetail.final_price) }}
+                </v-card-text>
+              </v-card>
             </v-card>
-            <v-card class="w-50 mx-2 px-4">
-              <v-card-title> Cara Pembayaran </v-card-title>
-              <v-expansion-panels>
-                <v-expansion-panel v-for="panel in panels" :key="panel.id">
-                  <v-expansion-panel-title>
-                    <v-img
-                      class="mr-4"
-                      :src="panel.img"
-                      max-width="40"
-                      height="40"
-                    ></v-img>
-                    {{ panel.title }}
-                  </v-expansion-panel-title>
-                  <v-expansion-panel-text>
-                    {{ panel.text }}
-                  </v-expansion-panel-text>
-                </v-expansion-panel>
-              </v-expansion-panels>
+            <v-card class="w-50 mx-2 px-4" max-height="220">
+              <v-card-title> Alamat Pembayaran </v-card-title>
+              <v-card-text>
+                <v-row>
+                  <v-col cols="2">Nama</v-col>
+                  <v-col cols="auto" class="px-0 mr-1">:</v-col>
+                  <v-col>{{ txDetail.user.name }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="2"> Alamat </v-col>
+                  <v-col cols="auto" class="px-0 mr-1"> : </v-col>
+                  <v-col
+                    >{{ txDetail.user.alamat }}, {{ txDetail.user.kecamatan }},
+                    {{ txDetail.user.kota }},
+                    {{ txDetail.user.provinsi }}
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="2" class="px-0 mr-2"></v-col>
+                  <v-col class="pa-0 ml-3">{{ txDetail.user.kode_pos }}</v-col>
+                </v-row>
+              </v-card-text>
             </v-card>
           </div>
-          <v-card-title class="text-center">Status Transaksi</v-card-title>
-          <v-card-text>
-            <v-timeline class="mb-4" direction="horizontal">
-              <v-timeline-item
-                v-for="list in transStatus"
-                :key="list.index"
-                :dot-color="getStatusColor(list.id)"
-                size="small"
-              >
-                {{ list.status }}
-              </v-timeline-item>
-            </v-timeline>
-          </v-card-text>
-        </v-card>
-      </v-container>
-    </div>
-    <!-- for status other menunggu pembayaran -->
-    <div v-else>
-      <v-container>
-        <v-btn
-          class="mb-2"
-          color="blue-darken-3"
-          prepend-icon="mdi-arrow-left"
-          @click="this.$router.push('/transaction')"
-          variant="plain"
-          >Back</v-btn
-        >
-        <v-card>
-          <v-card-title class="text-blue-darken-3"
-            >Transaction Details</v-card-title
-          >
-          <v-card class="mx-2 px-4 pb-4">
-            <v-card-text class="font-weight-bold">
-              Status: {{ getStatus(txDetail.status_id) }}
-            </v-card-text>
-            <v-card
-              class="ma-4"
-              v-for="items in txDetail.items"
-              :key="items.id"
+          <div v-if="txDetail.status_id === 1">
+            <v-btn
+              color="blue-darken-3"
+              block
+              :loading="loadingButton"
+              @click="(loadingButton = true), toPayment()"
+              >Lakukan Pembayaran</v-btn
             >
-              <v-card-text class="font-weight-bold">{{
-                items.product_name
-              }}</v-card-text>
-              <v-row class="ml-2">
-                <v-col> Quantity </v-col>
-                <v-col> Price </v-col>
-                <v-col> Total </v-col>
-              </v-row>
-              <v-row class="mt-n4 ml-2">
-                <v-col>
-                  {{ items.quantity }}
-                </v-col>
-                <v-col>
-                  {{ formatCurrency(items.price) }}
-                </v-col>
-                <v-col>
-                  {{ formatCurrency(items.total_price) }}
-                </v-col>
-              </v-row>
-            </v-card>
-            <v-expansion-panels>
-              <v-expansion-panel>
-                <v-expansion-panel-title class="font-weight-bold">
-                  Final Price: {{ formatCurrency(txDetail.final_price) }}
-                </v-expansion-panel-title>
-                <v-expansion-panel-text>
-                  <v-table>
-                    <tbody>
-                      <tr>
-                        <td>Total Price:</td>
-                        <td>
-                          {{
-                            formatCurrency(
-                              txDetail.final_price - txDetail.unique_code
-                            )
-                          }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Unique Code:</td>
-                        <td>{{ formatCurrency(txDetail.unique_code) }}</td>
-                      </tr>
-                    </tbody>
-                  </v-table>
-                </v-expansion-panel-text>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </v-card>
+          </div>
           <v-card-title class="text-center">Status Transaksi</v-card-title>
           <v-card-text>
             <v-timeline class="mb-4" direction="horizontal">
@@ -217,6 +119,7 @@ export default {
   data() {
     return {
       loading: true,
+      loadingButton: false,
       txDetail: [],
       transStatus: [
         { id: 1, status: "Menunggu Pembayaran" },
@@ -224,23 +127,17 @@ export default {
         { id: 3, status: "Barang Dikirim" },
         { id: 4, status: "Transaksi Selesai" },
       ],
-      panels: [
-        {
-          img: "https://logos-download.com/wp-content/uploads/2016/06/Bank_Mandiri_logo_fon.png",
-          title: "Bank Mandiri",
-          text: "Lakukan transfer ke nomor rekening Mandiri 03120327842104",
+      Toast: this.$swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", this.$swal.stopTimer);
+          toast.addEventListener("mouseleave", this.$swal.resumeTimer);
         },
-        {
-          img: "https://i0.wp.com/febi.uinsaid.ac.id/wp-content/uploads/2020/11/Logo-BRI-Bank-Rakyat-Indonesia-PNG-Terbaru.png?ssl=1",
-          title: "Bank BRI",
-          text: "Lakukan transfer ke nomor rekening BRI 74827341809",
-        },
-        {
-          img: "https://upload.wikimedia.org/wikipedia/id/thumb/5/55/BNI_logo.svg/2560px-BNI_logo.svg.png",
-          title: "Bank BNI",
-          text: "Lakukan transfer ke nomor rekening BNI 237874279",
-        },
-      ],
+      }),
     };
   },
   methods: {
@@ -254,12 +151,63 @@ export default {
             },
           }
         );
-        console.log(txDetail);
         this.txDetail = txDetail.data;
+        console.log(this.txDetail);
         this.loading = false;
       } catch (err) {
         console.log(err);
       }
+    },
+    toPayment() {
+      axios
+        .post(
+          useEnvStore().apiUrl + "payment/process-payment/",
+          this.txDetail,
+          {
+            headers: {
+              Authorization: "Bearer " + useAuthStore().accessToken,
+            },
+          }
+        )
+        .then((res) => {
+          window.snap.pay(this.txDetail.payment_token, {
+            onSuccess: () => {
+              this.loadingButton = false;
+              this.Toast.fire({
+                text: "Pembayaran berhasil",
+                icon: "success",
+                iconColor: "#FAFAFA",
+                color: "#FAFAFA",
+                background: "#1565C0",
+              });
+              this.getTxDetail();
+            },
+            onError: () => {
+              this.loadingButton = false;
+              this.Toast.fire({
+                text: "Pembayaran gagal",
+                icon: "error",
+                iconColor: "#FAFAFA",
+                color: "#FAFAFA",
+                background: "#E57373",
+              });
+              this.getTxDetail();
+            },
+            onClose: () => {
+              this.loadingButton = false;
+              this.Toast.fire({
+                text: "Pembayaran dibatalkan",
+                icon: "error",
+                iconColor: "#FAFAFA",
+                color: "#FAFAFA",
+                background: "#E57373",
+              });
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     getStatus(status) {
       console.log(status);
@@ -292,6 +240,16 @@ export default {
     },
   },
   mounted() {
+    let snapMidtrans = document.createElement("script");
+    snapMidtrans.setAttribute(
+      "src",
+      "https://app.sandbox.midtrans.com/snap/snap.js"
+    );
+    snapMidtrans.setAttribute(
+      "data-client-key",
+      "SB-Mid-client-lxNB99oD9QYJQZ5U"
+    );
+    document.head.appendChild(snapMidtrans);
     this.getTxDetail();
   },
 };
