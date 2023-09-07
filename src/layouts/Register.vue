@@ -135,20 +135,37 @@ export default {
         });
       } catch (err) {
         console.log(err);
-        this.Toast.fire({
-          title: "Error!",
-          text: "Registrasi gagal, periksa kembali data anda.",
-          icon: "error",
-          iconColor: "#C62828",
-          color: "#757575",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener("mouseenter", this.$swal.stopTimer);
-            toast.addEventListener("mouseleave", this.$swal.resumeTimer);
-          },
-        });
+        if (err.response.status === 409) {
+          this.Toast.fire({
+            title: "Error!",
+            text: "Email sudah digunakan.",
+            icon: "error",
+            iconColor: "#C62828",
+            color: "#757575",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", this.$swal.stopTimer);
+              toast.addEventListener("mouseleave", this.$swal.resumeTimer);
+            },
+          });
+        } else {
+          this.Toast.fire({
+            title: "Error!",
+            text: "Registrasi gagal, periksa kembali data anda.",
+            icon: "error",
+            iconColor: "#C62828",
+            color: "#757575",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", this.$swal.stopTimer);
+              toast.addEventListener("mouseleave", this.$swal.resumeTimer);
+            },
+          });
+        }
         this.loading = false;
       }
     },
