@@ -13,7 +13,7 @@
       <v-card class="pa-4">
         <v-card-title class="text-blue-darken-3">Your Transaction</v-card-title>
         <v-card
-          v-for="tx in txData"
+          v-for="tx in reversedTrans"
           :key="tx.id"
           class="mb-2"
           @click="toTxDetail(tx.id)"
@@ -42,6 +42,11 @@ export default {
       loading: true,
       txData: [],
     };
+  },
+  computed: {
+    reversedTrans() {
+      return this.txData.slice().reverse();
+    },
   },
   methods: {
     async getTxs() {

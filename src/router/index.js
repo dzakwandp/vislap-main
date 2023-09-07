@@ -11,7 +11,8 @@ import Cart from '@/views/CartPage.vue'
 import Trans from '@/views/Trans/TransPage.vue'
 import TransDetail from '@/views/Trans/TransDetail.vue'
 import Service from '@/views/ServicePage.vue'
-import ServiceList from '@/views/ServiceList.vue'
+import ServiceList from '@/views/Service/ServiceList.vue'
+import ServiceDetail from '@/views/Service/ServiceDetail.vue'
 import Profile from '@/views/ProfilePage.vue'
 import About from '@/views/AboutPage.vue'
 
@@ -54,6 +55,11 @@ const routes = [
         path: 'servicelist',
         name: 'servicelist',
         component: ServiceList
+      },
+      {
+        path: 'service/:id',
+        name: 'service',
+        component: ServiceDetail
       },
       {
         path: 'profile',

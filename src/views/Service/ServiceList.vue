@@ -14,7 +14,12 @@
         <v-card-title class="text-blue-darken-3 mb-4">
           Your Service List
         </v-card-title>
-        <v-card class="mx-4 mb-12" v-for="item in serviceData" :key="item.id">
+        <v-card
+          class="mx-4 mb-4"
+          v-for="item in reversedService"
+          :key="item.id"
+          @click="this.$router.push('/service/' + item.id)"
+        >
           <v-row class="ml-2">
             <v-col> Date: </v-col>
             <v-col> Technician: </v-col>
@@ -29,22 +34,6 @@
             </v-col>
             <v-col>
               {{ item.service_status.status_name }}
-            </v-col>
-          </v-row>
-          <v-row class="mt-4 ml-2">
-            <v-col> User Message: </v-col>
-            <v-col> Technician Message: </v-col>
-            <v-col> Final Message: </v-col>
-          </v-row>
-          <v-row class="mt-n4 ml-2">
-            <v-col>
-              {{ item.message1 }}
-            </v-col>
-            <v-col>
-              {{ item.message2 }}
-            </v-col>
-            <v-col>
-              {{ item.message3 }}
             </v-col>
           </v-row>
         </v-card>
@@ -64,6 +53,11 @@ export default {
       loading: true,
       serviceData: [],
     };
+  },
+  computed: {
+    reversedService() {
+      return this.serviceData.slice().reverse();
+    },
   },
   methods: {
     async getService() {
