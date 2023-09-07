@@ -55,62 +55,78 @@
             <v-card-text class="mx-4 mt-n8 text-body-2">{{
               items.nama
             }}</v-card-text>
+            <v-card-text v-if="items.stock === 0" class="text-red">
+              Stock habis!
+            </v-card-text>
             <div class="text-right mr-4 mb-2">
-              <v-menu :close-on-content-click="false">
-                <template v-slot:activator="{ props }">
-                  <v-btn
-                    color="blue-darken-3"
-                    icon="mdi-cart-arrow-down"
-                    location="right bottom"
-                    position="absolute"
-                    variant="text"
-                    v-bind="props"
-                    @click="
-                      (count = 1),
-                        (itemId = items.id),
-                        (itemPrice = items.harga),
-                        (added = false)
-                    "
-                  >
-                  </v-btn>
-                </template>
-                <v-card>
-                  <div class="mt-2 d-flex flex-row align-center">
+              <div v-if="items.stock === 0">
+                <v-btn
+                  color="blue-darken-3"
+                  icon="mdi-cart-arrow-down"
+                  location="right bottom"
+                  position="absolute"
+                  variant="text"
+                  disabled
+                >
+                </v-btn>
+              </div>
+              <div v-else>
+                <v-menu :close-on-content-click="false">
+                  <template v-slot:activator="{ props }">
                     <v-btn
-                      icon="mdi-minus-circle"
-                      variant="plain"
                       color="blue-darken-3"
-                      @click="minusCount()"
-                    ></v-btn>
-                    <v-card-text class="text-center">{{ count }}</v-card-text>
-                    <v-btn
-                      icon="mdi-plus-circle"
-                      variant="plain"
-                      color="blue-darken-3"
-                      @click="plusCount()"
-                    ></v-btn>
-                  </div>
-                  <v-card-actions class="mt-n4">
-                    <v-btn
-                      v-if="!added"
-                      class="caption mx-auto"
-                      color="blue-darken-3"
-                      size="small"
-                      icon="mdi-cart-plus"
-                      variant="plain"
-                      @click="addToCart(), (cartLoading = true)"
-                      :loading="cartLoading"
-                    ></v-btn>
-                    <v-icon
-                      v-else
-                      class="caption mx-auto"
-                      color="green darken-3"
-                      size="small"
-                      >mdi-check-circle</v-icon
+                      icon="mdi-cart-arrow-down"
+                      location="right bottom"
+                      position="absolute"
+                      variant="text"
+                      v-bind="props"
+                      @click="
+                        (count = 1),
+                          (itemId = items.id),
+                          (itemPrice = items.harga),
+                          (added = false)
+                      "
                     >
-                  </v-card-actions>
-                </v-card>
-              </v-menu>
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <div class="mt-2 d-flex flex-row align-center">
+                      <v-btn
+                        icon="mdi-minus-circle"
+                        variant="plain"
+                        color="blue-darken-3"
+                        @click="minusCount()"
+                      ></v-btn>
+                      <v-card-text class="text-center">{{ count }}</v-card-text>
+                      <v-btn
+                        icon="mdi-plus-circle"
+                        variant="plain"
+                        color="blue-darken-3"
+                        @click="plusCount()"
+                      ></v-btn>
+                    </div>
+                    <v-card-actions class="mt-n4">
+                      <v-btn
+                        v-if="!added"
+                        class="caption mx-auto"
+                        color="blue-darken-3"
+                        size="small"
+                        icon="mdi-cart-plus"
+                        variant="plain"
+                        @click="addToCart(), (cartLoading = true)"
+                        :loading="cartLoading"
+                      ></v-btn>
+                      <v-icon
+                        v-else
+                        class="caption mx-auto"
+                        color="green darken-3"
+                        size="small"
+                        >mdi-check-circle</v-icon
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-menu>
+              </div>
             </div>
           </v-card>
         </v-col>

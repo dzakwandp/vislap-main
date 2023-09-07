@@ -23,7 +23,9 @@
           <div class="mt-4 w-50">
             <v-row>
               <v-col class="py-0"> Tanggal </v-col>
-              <v-col class="py-0"> : {{ serviceData.date }} </v-col>
+              <v-col class="py-0">
+                : {{ formattedDate(serviceData.date) }}
+              </v-col>
             </v-row>
             <v-row>
               <v-col class="py-0"> Status </v-col>
@@ -84,6 +86,7 @@
 </template>
 <script>
 import axios from "axios";
+import moment from "moment";
 
 import { useEnvStore } from "@/store/useEnvStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -135,6 +138,10 @@ export default {
         currency: "IDR",
         minimumFractionDigits: 0,
       }).format(value);
+    },
+    formattedDate(value) {
+      moment.locale("id");
+      return moment(value).format("D MMMM YYYY [Jam] HH:mm:s");
     },
   },
   mounted() {
