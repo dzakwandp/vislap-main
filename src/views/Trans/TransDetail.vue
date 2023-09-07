@@ -92,6 +92,16 @@
               >Lakukan Pembayaran</v-btn
             >
           </div>
+          <div v-if="txDetail.status_id === 3">
+            <v-btn
+              color="green-darken-3"
+              prepend-icon="mdi-archive"
+              block
+              :loading="loadingButton"
+              @click="(loadingButton = true), toConfirm()"
+              >Konfirmasi Barang Diterima</v-btn
+            >
+          </div>
           <v-card-title class="text-center">Status Transaksi</v-card-title>
           <v-card-text>
             <v-timeline class="mb-4" direction="horizontal">
@@ -122,6 +132,8 @@ export default {
       loadingButton: false,
       txDetail: [],
       transStatus: [
+        { id: 5, status: "Dibatalkan" },
+        { id: 6, status: "Refund" },
         { id: 1, status: "Menunggu Pembayaran" },
         { id: 2, status: "Pembayaran Diterima" },
         { id: 3, status: "Barang Dikirim" },
@@ -154,6 +166,32 @@ export default {
         this.txDetail = txDetail.data;
         console.log(this.txDetail);
         this.loading = false;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    toConfirm() {
+      try {
+        const accept = axios.put(
+          useEnvStore().apiUrl + "txs/" + this.txDetail.id,
+          {
+            status_id: 4,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + useAuthStore().accessToken,
+            },
+          }
+        );
+        this.Toast.fire({
+          text: "Pesanan selesai",
+          icon: "success",
+          iconColor: "#FAFAFA",
+          color: "#FAFAFA",
+          background: "#1565C0",
+        });
+        this.loadingButton = false;
+        this.getTxDetail();
       } catch (err) {
         console.log(err);
       }
@@ -226,7 +264,11 @@ export default {
     },
     getStatusColor(listId) {
       if (listId === this.txDetail.status_id) {
-        return "green";
+        if (this.txDetail.status_id === 5 || this.txDetail.status_id === 6) {
+          return "red";
+        } else {
+          return "green";
+        }
       } else {
         return "grey";
       }
