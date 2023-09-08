@@ -44,7 +44,7 @@
             variant="outlined"
             min-width="125"
             rounded="xl"
-            @click="this.$router.push('/service')"
+            @click="this.$router.push('/services')"
             >Service</v-btn
           >
         </div>

@@ -108,7 +108,7 @@ export default {
       links: [
         { title: "Home", route: "/" },
         { title: "Spareparts", route: "/shop" },
-        { title: "Service", route: "/service" },
+        { title: "Service", route: "/services" },
         { title: "About Us", route: "/about" },
       ],
       isLoggedIn: null,

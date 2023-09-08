@@ -47,8 +47,8 @@ const routes = [
         component: TransDetail
       },
       {
-        path: 'service',
-        name: 'service',
+        path: 'services',
+        name: 'services',
         component: Service
       },
       {
