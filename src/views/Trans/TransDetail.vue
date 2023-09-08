@@ -60,7 +60,7 @@
               </v-card>
             </v-card>
             <v-card class="w-50 mx-2 px-4" max-height="220">
-              <v-card-title> Alamat Pembayaran </v-card-title>
+              <v-card-title> Alamat Pengiriman </v-card-title>
               <v-card-text>
                 <v-row>
                   <v-col cols="2">Nama</v-col>

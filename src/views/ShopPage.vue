@@ -55,7 +55,10 @@
             <v-card-text class="mx-4 mt-n8 text-body-2">{{
               items.nama
             }}</v-card-text>
-            <v-card-text v-if="items.stock === 0" class="text-red">
+            <v-card-text
+              v-if="items.stock === 0"
+              class="text-red text-left mx-4 mt-n4 text-body-2 font-weight-bold"
+            >
               Stock habis!
             </v-card-text>
             <div class="text-right mr-4 mb-2">
