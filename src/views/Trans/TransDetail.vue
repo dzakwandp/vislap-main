@@ -80,6 +80,13 @@
                   <v-col cols="2" class="px-0 mr-2"></v-col>
                   <v-col class="pa-0 ml-3">{{ txDetail.user.kode_pos }}</v-col>
                 </v-row>
+                <v-row
+                  v-if="txDetail.status_id === 3 || txDetail.status_id === 4"
+                >
+                  <v-col cols="2"> No. Resi </v-col>
+                  <v-col cols="auto" class="px-0 mr-1"> : </v-col>
+                  <v-col>{{ txDetail.resi }}</v-col>
+                </v-row>
               </v-card-text>
             </v-card>
           </div>
