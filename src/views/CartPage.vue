@@ -65,6 +65,14 @@
           <!-- ketika cart memiliki item -->
           <tbody v-else>
             <tr>
+              <td>Sub Total</td>
+              <td>{{ formatCurrency(totalItemPrice) }}</td>
+            </tr>
+            <tr>
+              <td>Biaya Admin</td>
+              <td>{{ formatCurrency(adminFee) }}</td>
+            </tr>
+            <tr>
               <td>Total</td>
               <td>{{ formatCurrency(grandTotal) }}</td>
             </tr>
@@ -97,7 +105,7 @@ export default {
       loadingAdd: false,
       totalItemPrice: 0,
       grandTotal: 0,
-      uniqueCode: 0,
+      adminFee: parseInt(4000),
       url: useEnvStore().apiUrl,
       Toast: this.$swal.mixin({
         toast: true,
@@ -230,7 +238,7 @@ export default {
                         });
                       },
                       onClose: () => {
-                        this.loadingAdd = false;
+                        this.$router.push("/transaction/" + txs.data.id);
                         this.Toast.fire({
                           text: "Pembayaran dibatalkan",
                           icon: "error",
@@ -271,9 +279,7 @@ export default {
         0
       );
       this.totalItemPrice = total_bayar;
-      this.uniqueCode = 0;
-      this.grandTotal =
-        parseInt(this.totalItemPrice) + parseInt(this.uniqueCode);
+      this.grandTotal = parseInt(this.totalItemPrice) + parseInt(this.adminFee);
     },
   },
   mounted() {
