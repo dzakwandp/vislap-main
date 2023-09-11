@@ -55,6 +55,13 @@
           >Daftar disini</router-link
         >
       </div>
+      <div class="text-body-2 mt-2">
+        <router-link
+          class="text-decoration-none text-blue-darken-3"
+          to="/forget_password"
+          >Lupa Password?</router-link
+        >
+      </div>
     </v-col>
   </v-row>
 </template>

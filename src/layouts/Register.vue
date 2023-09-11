@@ -56,6 +56,33 @@
           density="compact"
           @keyup.enter="onRegist(), (loading = true)"
         ></v-text-field>
+        <div class="d-flex align-center">
+          <v-select
+            :items="question"
+            v-model="selectedQuestion"
+            label="Pilih pertanyaan pemulihan"
+          >
+          </v-select>
+          <v-tooltip location="top">
+            <template v-slot:activator="{ props }">
+              <v-icon v-bind="props" color="red-darken-1"
+                >mdi-help-circle</v-icon
+              >
+            </template>
+            <span>
+              Harap ingat pertanyaan dan jawaban anda, digunakan untuk melakukan
+              lupa password
+            </span>
+          </v-tooltip>
+        </div>
+        <v-text-field
+          v-model="answer"
+          label="Jawaban"
+          variant="outlined"
+          prepend-inner-icon="mdi-chat-outline"
+          density="compact"
+          clearable
+        ></v-text-field>
         <v-card-action>
           <v-btn
             class="mb-4 text-body-2"
@@ -80,13 +107,14 @@
 </template>
 <script>
 import sideImage from "@/assets/login_img.png";
+import question from "@/assets/question.json";
 
 import { useEnvStore } from "@/store/useEnvStore";
-import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 export default {
   data() {
     return {
+      tooltip: false,
       showpass: false,
       showcon: false,
       sideImage: sideImage,
@@ -94,6 +122,9 @@ export default {
       email: null,
       password: null,
       con_password: null,
+      question: question,
+      selectedQuestion: null,
+      answer: null,
       loading: false,
       rules: {
         required: (value) => !!value || "Wajib diisi.",
@@ -119,6 +150,8 @@ export default {
             email: this.email,
             password: this.password,
             confirm_password: this.con_password,
+            reset_question: this.selectedQuestion,
+            reset_answer: this.answer,
           }
         );
         this.Toast.fire({
@@ -142,13 +175,8 @@ export default {
             icon: "error",
             iconColor: "#C62828",
             color: "#757575",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener("mouseenter", this.$swal.stopTimer);
-              toast.addEventListener("mouseleave", this.$swal.resumeTimer);
-            },
+            showConfirmButton: true,
+            timerProgressBar: false,
           });
         } else {
           this.Toast.fire({
@@ -157,13 +185,8 @@ export default {
             icon: "error",
             iconColor: "#C62828",
             color: "#757575",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener("mouseenter", this.$swal.stopTimer);
-              toast.addEventListener("mouseleave", this.$swal.resumeTimer);
-            },
+            showConfirmButton: true,
+            timerProgressBar: false,
           });
         }
         this.loading = false;

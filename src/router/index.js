@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar.vue'
 
 import Login from '@/layouts/LoginPage.vue'
 import Register from '@/layouts/Register.vue'
+import ForgetPassword from '@/layouts/ForgetPassword.vue'
 import Main from '@/views/MainPage.vue'
 import Shop from '@/views/ShopPage.vue'
 import Cart from '@/views/CartPage.vue'
@@ -80,6 +81,10 @@ const routes = [
   {
     path: '/register',
     component: Register
+  },
+  {
+    path: '/forget_password',
+    component: ForgetPassword
   }
 ]
 
