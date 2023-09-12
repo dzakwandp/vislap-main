@@ -100,6 +100,7 @@ export default {
   data() {
     return {
       cartItem: [],
+      userData: [],
       modifiedItem: [],
       loading: true,
       loadingAdd: false,
@@ -149,6 +150,19 @@ export default {
         }
       }
     },
+    async getUserData() {
+      try {
+        const user = await axios.get(useEnvStore().apiUrl + "users/profile", {
+          headers: {
+            Authorization: "Bearer " + useAuthStore().accessToken,
+          },
+        });
+        console.log(user);
+        this.userData = user.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     async deleteCartItem(itemId) {
       try {
         const accessToken = useAuthStore().accessToken;
@@ -178,6 +192,11 @@ export default {
           {
             user_id: useAuthStore().user_id,
             items: this.modifiedItem,
+            alamat: this.userData.alamat,
+            provinsi: this.userData.provinsi,
+            kota: this.userData.kota,
+            kecamatan: this.userData.kecamatan,
+            kode_pos: this.userData.kode_pos,
             final_price: this.grandTotal,
           },
           {
@@ -294,6 +313,7 @@ export default {
     );
     document.head.appendChild(snapMidtrans);
     this.getCartData();
+    this.getUserData();
   },
 };
 </script>

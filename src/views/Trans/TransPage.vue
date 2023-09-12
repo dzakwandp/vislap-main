@@ -62,6 +62,9 @@ export default {
         this.loading = false;
       } catch (err) {
         console.log(err);
+        if (err.response.status === 403) {
+          this.$router.push("/login");
+        }
       }
     },
     toTxDetail(id) {
