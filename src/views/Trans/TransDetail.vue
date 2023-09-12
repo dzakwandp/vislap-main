@@ -204,55 +204,40 @@ export default {
       }
     },
     toPayment() {
-      axios
-        .post(
-          useEnvStore().apiUrl + "payment/process-payment/",
-          this.txDetail,
-          {
-            headers: {
-              Authorization: "Bearer " + useAuthStore().accessToken,
-            },
-          }
-        )
-        .then((res) => {
-          window.snap.pay(this.txDetail.payment_token, {
-            onSuccess: () => {
-              this.loadingButton = false;
-              this.Toast.fire({
-                text: "Pembayaran berhasil",
-                icon: "success",
-                iconColor: "#FAFAFA",
-                color: "#FAFAFA",
-                background: "#1565C0",
-              });
-              this.getTxDetail();
-            },
-            onError: () => {
-              this.loadingButton = false;
-              this.Toast.fire({
-                text: "Pembayaran gagal",
-                icon: "error",
-                iconColor: "#FAFAFA",
-                color: "#FAFAFA",
-                background: "#E57373",
-              });
-              this.getTxDetail();
-            },
-            onClose: () => {
-              this.loadingButton = false;
-              this.Toast.fire({
-                text: "Pembayaran dibatalkan",
-                icon: "error",
-                iconColor: "#FAFAFA",
-                color: "#FAFAFA",
-                background: "#E57373",
-              });
-            },
+      window.snap.pay(this.txDetail.payment_token, {
+        onSuccess: () => {
+          this.loadingButton = false;
+          this.Toast.fire({
+            text: "Pembayaran berhasil",
+            icon: "success",
+            iconColor: "#FAFAFA",
+            color: "#FAFAFA",
+            background: "#1565C0",
           });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          this.getTxDetail();
+        },
+        onError: () => {
+          this.loadingButton = false;
+          this.Toast.fire({
+            text: "Pembayaran gagal",
+            icon: "error",
+            iconColor: "#FAFAFA",
+            color: "#FAFAFA",
+            background: "#E57373",
+          });
+          this.getTxDetail();
+        },
+        onClose: () => {
+          this.loadingButton = false;
+          this.Toast.fire({
+            text: "Pembayaran dibatalkan",
+            icon: "error",
+            iconColor: "#FAFAFA",
+            color: "#FAFAFA",
+            background: "#E57373",
+          });
+        },
+      });
     },
     getStatus(status) {
       console.log(status);
