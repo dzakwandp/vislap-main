@@ -46,12 +46,21 @@
               />
             </v-row>
           </v-col>
-          <v-btn
-            color="blue-darken-3"
-            :loading="loadingBut"
-            @click="(loadingBut = true), getByDate()"
-            >Submit</v-btn
-          >
+          <div class="d-flex justify-center">
+            <v-btn
+              class="mr-4"
+              color="blue-darken-3"
+              :loading="loadingBut"
+              @click="(loadingBut = true), getByDate()"
+              >Submit</v-btn
+            >
+            <v-btn
+              color="green-darken-3"
+              :loading="loadingBut"
+              @click="(loadingBut = true), getTxs()"
+              >Reset</v-btn
+            >
+          </div>
         </div>
       </v-menu>
       <v-card class="pa-4">
@@ -129,6 +138,7 @@ export default {
         console.log(txs);
         this.txData = txs.data;
         this.loading = false;
+        this.loadingBut = false;
       } catch (err) {
         console.log(err);
         if (err.response.status === 403) {
@@ -138,16 +148,16 @@ export default {
     },
     async getByDate() {
       try {
-        const getDate = await axios.get(
+        const getDate = await axios.post(
           useEnvStore().apiUrl + "txs/range",
+          {
+            start_date: this.startDate,
+            end_date: this.endDate,
+          },
           {
             headers: {
               Authorization: "Bearer " + useAuthStore().accessToken,
             },
-          },
-          {
-            start_date: this.startDate,
-            end_date: this.endDate,
           }
         );
         console.log(getDate);
