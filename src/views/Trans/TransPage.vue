@@ -22,7 +22,7 @@
             color="blue-darken-3"
             v-bind="props"
             variant="outlined"
-            >Sort by Date</v-btn
+            >Filter by Date</v-btn
           >
         </template>
         <div class="d-flex flex-column bg-grey-lighten-4 pa-4">
