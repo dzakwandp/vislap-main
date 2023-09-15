@@ -71,9 +71,7 @@
                   <v-col cols="2"> Alamat </v-col>
                   <v-col cols="auto" class="px-0 mr-1"> : </v-col>
                   <v-col
-                    >{{ txDetail.user.alamat }}, {{ txDetail.user.kecamatan }},
-                    {{ txDetail.user.kota }},
-                    {{ txDetail.user.provinsi }}
+                    >{{ txDetail.alamat }}
                   </v-col>
                 </v-row>
                 <v-row>
