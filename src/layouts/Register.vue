@@ -158,7 +158,7 @@ export default {
   },
   computed: {
     siteKey() {
-      return "6LdqvPsoAAAAANOWzy3tTk4b-NZmGWjQsfedjw2q";
+      return "6LdUl_0oAAAAALJQpk4vq1NqMvl_C3Q8avk1JGZ9";
     },
   },
   methods: {
