@@ -83,6 +83,17 @@
           density="compact"
           clearable
         ></v-text-field>
+        <VueRecaptcha
+          class="w-full mb-4"
+          :sitekey="siteKey"
+          :load-recaptcha-script="true"
+          @verify="handleCaptchaSuccess"
+          @error="handleCaptchaFailed"
+        >
+        </VueRecaptcha>
+        <span v-if="showVerificationError" class="text-caption text-red"
+          >verification failed</span
+        >
         <v-card-action>
           <v-btn
             class="mb-4 text-body-2"
@@ -109,9 +120,12 @@
 import sideImage from "@/assets/login_img.png";
 import question from "@/assets/question.json";
 
+import { VueRecaptcha } from "vue-recaptcha";
+
 import { useEnvStore } from "@/store/useEnvStore";
 import axios from "axios";
 export default {
+  components: { VueRecaptcha },
   data() {
     return {
       tooltip: false,
@@ -126,6 +140,8 @@ export default {
       selectedQuestion: null,
       answer: null,
       loading: false,
+      verifiedCaptcha: false,
+      showVerificationError: false,
       rules: {
         required: (value) => !!value || "Wajib diisi.",
         email: (value) => {
@@ -140,55 +156,75 @@ export default {
       }),
     };
   },
+  computed: {
+    siteKey() {
+      return "6LdqvPsoAAAAANOWzy3tTk4b-NZmGWjQsfedjw2q";
+    },
+  },
   methods: {
+    handleCaptchaSuccess() {
+      this.verifiedCaptcha = true;
+      console.log(this.verifiedCaptcha);
+      this.loading = false;
+      this.showVerificationError = false;
+    },
+    handleCaptchaFailed() {
+      this.verifiedCaptcha = false;
+      console.log(this.verifiedCaptcha);
+    },
     async onRegist() {
-      try {
-        const regist = await axios.post(
-          useEnvStore().apiUrl + "users/registers",
-          {
-            name: this.name,
-            email: this.email,
-            password: this.password,
-            confirm_password: this.con_password,
-            reset_question: this.selectedQuestion,
-            reset_answer: this.answer,
-          }
-        );
-        this.Toast.fire({
-          title: "Berhasil!",
-          text: "Silahkan login menggunakan akun anda.",
-          icon: "success",
-          iconColor: "#2E7D32",
-          color: "#757575",
-          showConfirmButton: true,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.$router.push("/login");
-          }
-        });
-      } catch (err) {
-        console.log(err);
-        if (err.response.status === 409) {
+      if (this.verifiedCaptcha) {
+        try {
+          const regist = await axios.post(
+            useEnvStore().apiUrl + "users/registers",
+            {
+              name: this.name,
+              email: this.email,
+              password: this.password,
+              confirm_password: this.con_password,
+              reset_question: this.selectedQuestion,
+              reset_answer: this.answer,
+            }
+          );
           this.Toast.fire({
-            title: "Error!",
-            text: "Email sudah digunakan.",
-            icon: "error",
-            iconColor: "#C62828",
+            title: "Berhasil!",
+            text: "Silahkan login menggunakan akun anda.",
+            icon: "success",
+            iconColor: "#2E7D32",
             color: "#757575",
             showConfirmButton: true,
-            timerProgressBar: false,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login");
+            }
           });
-        } else {
-          this.Toast.fire({
-            title: "Error!",
-            text: "Registrasi gagal, periksa kembali data anda.",
-            icon: "error",
-            iconColor: "#C62828",
-            color: "#757575",
-            showConfirmButton: true,
-            timerProgressBar: false,
-          });
+        } catch (err) {
+          console.log(err);
+          if (err.response.status === 409) {
+            this.Toast.fire({
+              title: "Error!",
+              text: "Email sudah digunakan.",
+              icon: "error",
+              iconColor: "#C62828",
+              color: "#757575",
+              showConfirmButton: true,
+              timerProgressBar: false,
+            });
+          } else {
+            this.Toast.fire({
+              title: "Error!",
+              text: "Registrasi gagal, periksa kembali data anda.",
+              icon: "error",
+              iconColor: "#C62828",
+              color: "#757575",
+              showConfirmButton: true,
+              timerProgressBar: false,
+            });
+          }
+          this.loading = false;
         }
+      } else {
+        this.showVerificationError = true;
         this.loading = false;
       }
     },
