@@ -282,7 +282,18 @@ export default {
           });
         useAuthStore().getCartValue();
       } catch (err) {
-        console.log(err);
+        if (err.response.data.message === "stock not enough") {
+          this.Toast.fire({
+            text: "Stock habis.",
+            icon: "error",
+            iconColor: "#FAFAFA",
+            color: "#FAFAFA",
+            background: "#E57373",
+          });
+          this.loadingAdd = false;
+        } else {
+          console.log(err);
+        }
       }
     },
     formatCurrency(value) {
